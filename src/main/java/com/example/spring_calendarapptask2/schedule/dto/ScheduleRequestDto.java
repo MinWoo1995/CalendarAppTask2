@@ -1,6 +1,7 @@
 package com.example.spring_calendarapptask2.schedule.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,6 +17,6 @@ public class ScheduleRequestDto {
     @NotBlank(message = "할 일 내용은 필수입니다.")
     private String scheduleContent;
 
-    @NotBlank(message = "유저명은 필수입니다.")
-    private String userName;
+    @NotNull(message = "유저 Id는 필수입니다.")
+    private Long userId;
 }

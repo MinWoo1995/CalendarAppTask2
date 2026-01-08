@@ -4,6 +4,8 @@ import com.example.spring_calendarapptask2.schedule.dto.ScheduleRequestDto;
 import com.example.spring_calendarapptask2.schedule.dto.ScheduleResponseDto;
 import com.example.spring_calendarapptask2.schedule.entity.ScheduleEntity;
 import com.example.spring_calendarapptask2.schedule.reposistory.ScheduleRepository;
+import com.example.spring_calendarapptask2.user.entity.UserEntity;
+import com.example.spring_calendarapptask2.user.repository.UserRepository;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,17 +18,19 @@ import java.util.List;
 public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
+    private final UserRepository userRepository;
 
     //일정 생성
     @Transactional
     public ScheduleResponseDto createSchedule(ScheduleRequestDto requestDto) {
-        //RequestDto -> Entity 변환
-        ScheduleEntity scheduleEntity = new ScheduleEntity(requestDto);
+        //DTO에 담긴 userId로 실제 유저를 찾습니다. (중요!)
+        UserEntity user = userRepository.findById(requestDto.getUserId())
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다."));
 
-        //DB 저장
+        //찾은 유저 객체를 일정 엔티티에 넘겨줍니다.
+        ScheduleEntity scheduleEntity = new ScheduleEntity(requestDto, user);
+
         ScheduleEntity savedSchedule = scheduleRepository.save(scheduleEntity);
-
-        //Entity -> ResponseDto 변환 후 반환
         return new ScheduleResponseDto(savedSchedule);
     }
 
@@ -64,7 +68,7 @@ public class ScheduleService {
 
         //게시글이 있는지?
         if(allSchedule.isEmpty()){
-            throw new IllegalArgumentException("일치하는 작성자의 게시글이 없습니다.");
+            throw new IllegalArgumentException("등록된 일정이 없습니다.");
         }
 
         //List<ScheduleEntity>->List<ScheduleResponseDto>

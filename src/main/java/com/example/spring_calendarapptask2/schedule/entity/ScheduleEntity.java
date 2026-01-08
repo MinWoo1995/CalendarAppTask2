@@ -1,6 +1,8 @@
 package com.example.spring_calendarapptask2.schedule.entity;
 
+import com.example.spring_calendarapptask2.common.entity.BaseEntity;
 import com.example.spring_calendarapptask2.schedule.dto.ScheduleRequestDto;
+import com.example.spring_calendarapptask2.user.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,22 +18,21 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)//작성일, 수정일 자동화
-public class ScheduleEntity {
+public class ScheduleEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @CreatedDate
-    private LocalDateTime createdDate;
-    @LastModifiedDate
-    private LocalDateTime lastModifiedDate;
-    private String userName;
     private String scheduleTitle;
     private String scheduleContent;
 
-    public ScheduleEntity(ScheduleRequestDto requestDto) {
-        this.userName = requestDto.getUserName();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id") // DB에는 작성자 이름 대신 유저 ID(FK)가 저장
+    private UserEntity user;
+
+    public ScheduleEntity(ScheduleRequestDto requestDto, UserEntity user) {
         this.scheduleTitle = requestDto.getScheduleTitle();
         this.scheduleContent = requestDto.getScheduleContent();
+        this.user = user;
     }
 
     public void upDateSchedule(String title, String content) {

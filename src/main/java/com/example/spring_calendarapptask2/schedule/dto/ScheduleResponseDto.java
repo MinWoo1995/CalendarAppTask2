@@ -16,7 +16,7 @@ public class ScheduleResponseDto {
 
     public ScheduleResponseDto(ScheduleEntity entity) {
         this.id = entity.getId();
-        this.userName = entity.getUserName();
+        this.userName = entity.getUser().getUserName();
         this.scheduleTitle = entity.getScheduleTitle();
         this.scheduleContent = entity.getScheduleContent();
         this.createdDate = entity.getCreatedDate();
