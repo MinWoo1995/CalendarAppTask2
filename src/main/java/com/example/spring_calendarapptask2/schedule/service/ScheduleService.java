@@ -22,12 +22,12 @@ public class ScheduleService {
 
     //일정 생성
     @Transactional
-    public ScheduleResponseDto createSchedule(ScheduleRequestDto requestDto) {
-        //DTO에 담긴 userId로 실제 유저를 찾습니다. (중요!)
-        UserEntity user = userRepository.findById(requestDto.getUserId())
+    public ScheduleResponseDto createSchedule(ScheduleRequestDto requestDto,Long loginUserId) {
+        //DTO에 담긴 userId로 실제 유저를 찾기
+        UserEntity user = userRepository.findById(loginUserId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다."));
 
-        //찾은 유저 객체를 일정 엔티티에 넘겨줍니다.
+        //찾은 유저 객체를 일정 엔티티에 토스
         ScheduleEntity scheduleEntity = new ScheduleEntity(requestDto, user);
 
         ScheduleEntity savedSchedule = scheduleRepository.save(scheduleEntity);

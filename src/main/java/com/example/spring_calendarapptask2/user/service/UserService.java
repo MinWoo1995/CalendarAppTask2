@@ -1,13 +1,16 @@
 package com.example.spring_calendarapptask2.user.service;
 
 import com.example.spring_calendarapptask2.schedule.reposistory.ScheduleRepository;
+import com.example.spring_calendarapptask2.user.dto.UserLoginResponseDto;
 import com.example.spring_calendarapptask2.user.dto.UserRequestDto;
 import com.example.spring_calendarapptask2.user.dto.UserResponseDto;
 import com.example.spring_calendarapptask2.user.entity.UserEntity;
 import com.example.spring_calendarapptask2.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,14 +22,31 @@ public class UserService {
     private final UserRepository userRepository;
     private final ScheduleRepository scheduleRepository;
 
-    //유저 생성
+    //유저 회원가입
     @Transactional
-    public UserResponseDto createUser(UserRequestDto requestDto) {
+    public UserResponseDto signup(UserRequestDto requestDto) {
+        userRepository.findByUserEmail(requestDto.getUserEmail()).ifPresent(u -> {
+            throw new IllegalArgumentException("이미 가입된 이메일입니다.");
+        });
         UserEntity userEntity = new UserEntity(requestDto);
-
         UserEntity savedUser = userRepository.save(userEntity);
 
         return new UserResponseDto(savedUser);
+    }
+
+    //유저 로그인
+    @Transactional(readOnly = true)
+    public UserLoginResponseDto login(String email, String password) {
+        //이메일로 유저 찾기
+        UserEntity user = userRepository.findByUserEmail(email)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED));
+
+        //비밀번호 대조
+        if (!user.getUserPassword().equals(password)) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+
+        return new UserLoginResponseDto(user,"로그인에 성공하였습니다.");
     }
 
     //유저 전체 조회

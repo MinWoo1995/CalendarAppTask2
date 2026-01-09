@@ -17,6 +17,6 @@ public class ScheduleRequestDto {
     @NotBlank(message = "할 일 내용은 필수입니다.")
     private String scheduleContent;
 
-    @NotNull(message = "유저 Id는 필수입니다.")
-    private Long userId;
+    /*@NotNull(message = "유저 Id는 필수입니다.")
+    private Long userId;*/
 }
