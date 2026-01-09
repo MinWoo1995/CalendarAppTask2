@@ -21,10 +21,10 @@ public class UserEntity extends BaseEntity {
     private String userPassword;
 
 
-    public UserEntity(UserRequestDto requestDto) {
+    public UserEntity(UserRequestDto requestDto, String encodedPassword) {
         this.userName = requestDto.getUserName();
         this.userEmail = requestDto.getUserEmail();
-        this.userPassword = requestDto.getUserPassword();
+        this.userPassword = encodedPassword;
     }
 
     public void updateUser(UserRequestDto requestDto) {

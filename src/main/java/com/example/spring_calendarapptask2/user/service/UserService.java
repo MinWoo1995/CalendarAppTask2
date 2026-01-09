@@ -1,5 +1,6 @@
 package com.example.spring_calendarapptask2.user.service;
 
+import com.example.spring_calendarapptask2.config.PasswordEncoder;
 import com.example.spring_calendarapptask2.schedule.reposistory.ScheduleRepository;
 import com.example.spring_calendarapptask2.user.dto.UserLoginResponseDto;
 import com.example.spring_calendarapptask2.user.dto.UserRequestDto;
@@ -20,7 +21,7 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final ScheduleRepository scheduleRepository;
+    private final PasswordEncoder passwordEncoder;//비밀번호 암호화 도구 추가
 
     //유저 회원가입
     @Transactional
@@ -28,7 +29,10 @@ public class UserService {
         userRepository.findByUserEmail(requestDto.getUserEmail()).ifPresent(u -> {
             throw new IllegalArgumentException("이미 가입된 이메일입니다.");
         });
-        UserEntity userEntity = new UserEntity(requestDto);
+
+        String encodedPassword = passwordEncoder.encode(requestDto.getUserPassword());//패스워드 암호화
+
+        UserEntity userEntity = new UserEntity(requestDto,encodedPassword);
         UserEntity savedUser = userRepository.save(userEntity);
 
         return new UserResponseDto(savedUser);
@@ -41,9 +45,9 @@ public class UserService {
         UserEntity user = userRepository.findByUserEmail(email)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED,"일치하는 이메일 정보가 없습니다."));
 
-        //비밀번호 대조
-        if (!user.getUserPassword().equals(password)) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        //비밀번호 대조 password 지금 입력한 비밀번호 user.getUserPassword() DB에 저장된 패스워드
+        if (!passwordEncoder.matches(password, user.getUserPassword())) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "비밀번호가 일치하지 않습니다.");
         }
 
         return new UserLoginResponseDto(user,"로그인에 성공하였습니다.");
