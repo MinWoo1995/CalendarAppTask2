@@ -2,21 +2,10 @@ package com.example.spring_calendarapptask2.user.entity;
 
 import com.example.spring_calendarapptask2.common.entity.BaseEntity;
 import com.example.spring_calendarapptask2.user.dto.UserRequestDto;
-import com.example.spring_calendarapptask2.user.dto.UserResponseDto;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
-import jakarta.persistence.Id;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -28,11 +17,14 @@ public class UserEntity extends BaseEntity {
     private Long id;
     private String userName;
     private String userEmail;
+    @Column(updatable = false)
+    private String userPassword;
 
 
     public UserEntity(UserRequestDto requestDto) {
         this.userName = requestDto.getUserName();
         this.userEmail = requestDto.getUserEmail();
+        this.userPassword = requestDto.getUserPassword();
     }
 
     public void updateUser(UserRequestDto requestDto) {
