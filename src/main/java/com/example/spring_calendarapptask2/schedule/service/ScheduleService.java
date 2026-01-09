@@ -6,6 +6,10 @@ import com.example.spring_calendarapptask2.schedule.entity.ScheduleEntity;
 import com.example.spring_calendarapptask2.schedule.reposistory.ScheduleRepository;
 import com.example.spring_calendarapptask2.user.entity.UserEntity;
 import com.example.spring_calendarapptask2.user.repository.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -62,11 +66,17 @@ public class ScheduleService {
 
     //전체 조회
     @Transactional(readOnly = true)
-    public List<ScheduleResponseDto> getSchedule() {
+    public Page<ScheduleResponseDto> getSchedule(int page, int size) {
         //저장소에 있는 모든 일정 가져오기
-        List<ScheduleEntity> allSchedule = scheduleRepository.findAll();
+        //List<ScheduleEntity> allSchedule = scheduleRepository.findAll();
+
+        //Pageable 객체 생성 (page는 0부터 시작, 수정일 내림차순 정렬)
+        Pageable pageable = PageRequest.of(page, size, Sort.by("lastModifiedDate").descending());
+        //Repository에서 Page 객체로 조회
+        Page<ScheduleEntity> schedulePage = scheduleRepository.findAll(pageable);
 
         //게시글이 있는지?
+        /*
         if(allSchedule.isEmpty()){
             throw new IllegalArgumentException("등록된 일정이 없습니다.");
         }
@@ -80,6 +90,14 @@ public class ScheduleService {
 
         //결과 반환
         return dtos;
+         */
+        //데이터 존재 여부 체크
+        if (schedulePage.isEmpty()) {
+            throw new IllegalArgumentException("조회할 일정이 없습니다.");
+        }
+
+        //Entity Page를 Dto Page로 변환
+        return schedulePage.map(ScheduleResponseDto::new);
     }
 
     //단건 조회

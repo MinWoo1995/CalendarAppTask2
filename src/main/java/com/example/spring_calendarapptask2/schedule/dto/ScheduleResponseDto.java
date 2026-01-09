@@ -13,6 +13,7 @@ public class ScheduleResponseDto {
     private String scheduleContent;
     private LocalDateTime createdDate; // JPA Auditing 활용 필드
     private LocalDateTime lastModifiedDate; // JPA Auditing 활용 필드
+    private int commentCount;
 
     public ScheduleResponseDto(ScheduleEntity entity) {
         this.id = entity.getId();
@@ -21,5 +22,6 @@ public class ScheduleResponseDto {
         this.scheduleContent = entity.getScheduleContent();
         this.createdDate = entity.getCreatedDate();
         this.lastModifiedDate = entity.getLastModifiedDate();
+        this.commentCount = entity.getComments().size();
     }
 }

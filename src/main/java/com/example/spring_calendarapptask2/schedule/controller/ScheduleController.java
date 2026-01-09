@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -51,10 +52,13 @@ public class ScheduleController {
 
     //일정 전체 조회 API
     @GetMapping
-    public ResponseEntity<List<ScheduleResponseDto>> getScheduleAll(HttpServletRequest request) {
+    public ResponseEntity<Page<ScheduleResponseDto>> getScheduleAll(
+            @RequestParam(defaultValue = "0") int page, // 디폴트 페이지 번호
+            @RequestParam(defaultValue = "10") int size, // 디폴트 페이지 크기 10
+            HttpServletRequest request){
         loginSessionCheck(request);
-        List<ScheduleResponseDto> responseList = scheduleService.getSchedule();
-        return ResponseEntity.ok(responseList);
+        Page<ScheduleResponseDto> responsePage = scheduleService.getSchedule(page, size);
+        return ResponseEntity.ok(responsePage);
     }
 
     //일정 수정 API

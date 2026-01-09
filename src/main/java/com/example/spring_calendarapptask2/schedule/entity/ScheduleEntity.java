@@ -1,5 +1,6 @@
 package com.example.spring_calendarapptask2.schedule.entity;
 
+import com.example.spring_calendarapptask2.comment.entity.CommentEntity;
 import com.example.spring_calendarapptask2.common.entity.BaseEntity;
 import com.example.spring_calendarapptask2.schedule.dto.ScheduleRequestDto;
 import com.example.spring_calendarapptask2.user.entity.UserEntity;
@@ -13,6 +14,8 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -29,6 +32,9 @@ public class ScheduleEntity extends BaseEntity {
     @JoinColumn(name = "user_id") // DB에는 작성자 이름 대신 유저 ID(FK)가 저장
     private UserEntity user;
 
+    @OneToMany(mappedBy = "scheduleEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CommentEntity> comments = new ArrayList<>();
+
     public ScheduleEntity(ScheduleRequestDto requestDto, UserEntity user) {
         this.scheduleTitle = requestDto.getScheduleTitle();
         this.scheduleContent = requestDto.getScheduleContent();
@@ -38,6 +44,7 @@ public class ScheduleEntity extends BaseEntity {
     public void upDateSchedule(String title, String content) {
         this.scheduleTitle = title;
         this.scheduleContent = content;
+        this.setLastModifiedDate(LocalDateTime.now());
     }
 
 }
