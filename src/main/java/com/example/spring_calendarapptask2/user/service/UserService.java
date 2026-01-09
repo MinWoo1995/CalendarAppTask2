@@ -39,7 +39,7 @@ public class UserService {
     public UserLoginResponseDto login(String email, String password) {
         //이메일로 유저 찾기
         UserEntity user = userRepository.findByUserEmail(email)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED,"일치하는 이메일 정보가 없습니다."));
 
         //비밀번호 대조
         if (!user.getUserPassword().equals(password)) {
