@@ -12,6 +12,7 @@ import com.example.spring_calendarapptask2.user.repository.UserRepository;
 import com.example.spring_calendarapptask2.user.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
-    HttpServletRequest request;
 
     //로그인 확인
     private void loginSessionCheck(HttpServletRequest request) {
@@ -39,7 +39,7 @@ public class UserController {
 
     //유저 회원가입 API
     @PostMapping
-    public ResponseEntity<UserResponseDto> userSignup(@RequestBody UserRequestDto requestDto) {
+    public ResponseEntity<UserResponseDto> userSignup(@Valid @RequestBody UserRequestDto requestDto) {
         return ResponseEntity.ok(userService.signup(requestDto));
     }
 
@@ -52,7 +52,7 @@ public class UserController {
     //유저 로그인 API
     @PostMapping("/login")
     public UserLoginResponseDto login(
-            @RequestBody UserLoginRequestDto loginRequestDto,
+            @Valid @RequestBody UserLoginRequestDto loginRequestDto,
             HttpServletRequest request //서블릿 리퀘스트를 받아옵니다.
     ) {
         //서비스에서 이메일/비밀번호 검증 (성공하면 유저 엔티티 반환)
@@ -81,7 +81,7 @@ public class UserController {
     @PutMapping("/{userId}")
     public ResponseEntity<UserResponseDto> updateUser(
             @PathVariable Long userId,
-            @RequestBody UserRequestDto requestDto,
+            @Valid @RequestBody UserRequestDto requestDto,
             HttpServletRequest request){
         loginSessionCheck(request);
         return ResponseEntity.ok(userService.updateUser(userId, requestDto));

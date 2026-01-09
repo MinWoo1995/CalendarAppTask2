@@ -2,6 +2,7 @@ package com.example.spring_calendarapptask2.common.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.server.ResponseStatusException;
@@ -33,6 +34,22 @@ public class GlobalExceptionHandler {
         body.put("status", HttpStatus.BAD_REQUEST.value()); // 400
         body.put("error", "Bad Request");
         body.put("message", ex.getMessage()); // IllegalArgumentException은 getMessage()를 사용
+
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, Object>> handleValidationException(MethodArgumentNotValidException ex) {
+        Map<String, Object> body = new LinkedHashMap<>();
+
+        body.put("status", HttpStatus.BAD_REQUEST.value()); // 400
+        body.put("error", "Validation Error");
+
+        // DTO의 message = "..."내용을 가로채온다
+        String errorMessage = ex.getBindingResult()
+                .getFieldError()
+                .getDefaultMessage();
+
+        body.put("message", errorMessage);
 
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }

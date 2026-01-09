@@ -5,6 +5,7 @@ import com.example.spring_calendarapptask2.schedule.dto.ScheduleResponseDto;
 import com.example.spring_calendarapptask2.schedule.service.ScheduleService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +33,7 @@ public class ScheduleController {
 
     //일정 생성 API
     @PostMapping
-    public ResponseEntity<ScheduleResponseDto> createSchedule(@RequestBody ScheduleRequestDto requestDto,HttpServletRequest request) {
+    public ResponseEntity<ScheduleResponseDto> createSchedule(@Valid @RequestBody ScheduleRequestDto requestDto, HttpServletRequest request) {
         loginSessionCheck(request);
 
         HttpSession session = request.getSession(false);
@@ -60,7 +61,7 @@ public class ScheduleController {
     @PutMapping("/{scheduleId}")
     public ResponseEntity<ScheduleResponseDto> updateSchedule(
             @PathVariable Long scheduleId,
-            @RequestBody ScheduleRequestDto requestDto,
+            @Valid @RequestBody ScheduleRequestDto requestDto,
             HttpServletRequest request){
 
         loginSessionCheck(request);
