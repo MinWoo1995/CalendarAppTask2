@@ -18,6 +18,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, Object>> handleResponseStatusException(ResponseStatusException ex) {
         Map<String, Object> body = new LinkedHashMap<>();
 
+        //넣은 순서대로 저장
         //상태 코드
         body.put("status", ex.getStatusCode().value());
         //에러 종류
@@ -25,8 +26,9 @@ public class GlobalExceptionHandler {
         //작성한 오류 메세지 출력
         body.put("message", ex.getReason());
 
-        return new ResponseEntity<>(body, ex.getStatusCode());
+        return new ResponseEntity<>(body, ex.getStatusCode());//각종 정보와 상태코드를 리턴
     }
+    //IllegalArgumentException이 발생시 해당 메서드 실행
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Map<String, Object>> handleIllegalArgumentException(IllegalArgumentException ex) {
         Map<String, Object> body = new LinkedHashMap<>();
@@ -35,8 +37,9 @@ public class GlobalExceptionHandler {
         body.put("error", "Bad Request");
         body.put("message", ex.getMessage()); // IllegalArgumentException은 getMessage()를 사용
 
-        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);//400번대 에러와 메세지 전달
     }
+    //MethodArgumentNotValidException이 발생시 해당 메서드 실행
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleValidationException(MethodArgumentNotValidException ex) {
         Map<String, Object> body = new LinkedHashMap<>();
@@ -51,6 +54,6 @@ public class GlobalExceptionHandler {
 
         body.put("message", errorMessage);
 
-        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);//400번대 에러와 메세지 전달
     }
 }

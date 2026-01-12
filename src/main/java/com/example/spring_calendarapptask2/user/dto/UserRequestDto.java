@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+//회원가입 요청
 @Getter
 @NoArgsConstructor
 public class UserRequestDto {

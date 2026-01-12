@@ -11,6 +11,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
 
+//회원가입 응답
 @Getter
 public class UserResponseDto {
     private Long id;

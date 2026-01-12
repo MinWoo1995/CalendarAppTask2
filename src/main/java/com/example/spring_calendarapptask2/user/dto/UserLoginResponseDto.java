@@ -3,6 +3,7 @@ package com.example.spring_calendarapptask2.user.dto;
 import com.example.spring_calendarapptask2.user.entity.UserEntity;
 import lombok.Getter;
 
+//로그인 응답
 @Getter
 public class UserLoginResponseDto {
     private Long id;

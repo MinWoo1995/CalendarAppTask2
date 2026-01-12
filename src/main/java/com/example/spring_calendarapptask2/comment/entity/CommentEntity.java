@@ -38,7 +38,7 @@ public class CommentEntity extends BaseEntity {
 
     public void updateComment(CommentRequestDto requestDto){
         this.commentContent = requestDto.getCommentContent();
-        this.setLastModifiedDate(LocalDateTime.now());
+        this.setLastModifiedDate(LocalDateTime.now());//수정 시간 업데이트
     }
 
 }

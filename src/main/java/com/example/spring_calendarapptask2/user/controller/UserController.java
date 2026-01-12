@@ -83,14 +83,14 @@ public class UserController {
             @PathVariable Long userId,
             @Valid @RequestBody UserRequestDto requestDto,
             HttpServletRequest request){
-        loginSessionCheck(request);
+        loginSessionCheck(request);//로그인 확인
         return ResponseEntity.ok(userService.updateUser(userId, requestDto));
     }
 
     //유저 삭제 API
     @DeleteMapping("/{userId}")
     public ResponseEntity<Long> deleteUser(@PathVariable Long userId,HttpServletRequest request){
-        loginSessionCheck(request);
+        loginSessionCheck(request);//로그인 확인
         Long deletedId = userService.deleteUser(userId);
         return ResponseEntity.ok(deletedId);
     }

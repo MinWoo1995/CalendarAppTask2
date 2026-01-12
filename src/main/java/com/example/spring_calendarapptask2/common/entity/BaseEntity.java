@@ -24,6 +24,6 @@ public abstract class BaseEntity {
 
 
     protected void setLastModifiedDate(LocalDateTime now) {
-        this.lastModifiedDate = now;
+        this.lastModifiedDate = now;//수정시 수정시간정보 업데이트
     }
 }

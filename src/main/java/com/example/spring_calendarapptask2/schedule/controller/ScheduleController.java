@@ -35,7 +35,7 @@ public class ScheduleController {
     //일정 생성 API
     @PostMapping
     public ResponseEntity<ScheduleResponseDto> createSchedule(@Valid @RequestBody ScheduleRequestDto requestDto, HttpServletRequest request) {
-        loginSessionCheck(request);
+        loginSessionCheck(request);//로그인 확인
 
         HttpSession session = request.getSession(false);
         Long loginUserId = (Long) session.getAttribute("loginUser");
@@ -46,7 +46,7 @@ public class ScheduleController {
     //일정 단건 조회 API
     @GetMapping("/{id}")
     public ResponseEntity<ScheduleResponseDto> getScheduleOne(@PathVariable Long id,HttpServletRequest request) {
-        loginSessionCheck(request);
+        loginSessionCheck(request);//로그인 확인
         return ResponseEntity.ok(scheduleService.getScheduleById(id));
     }
 
@@ -56,9 +56,9 @@ public class ScheduleController {
             @RequestParam(defaultValue = "0") int page, // 디폴트 페이지 번호
             @RequestParam(defaultValue = "10") int size, // 디폴트 페이지 크기 10
             HttpServletRequest request){
-        loginSessionCheck(request);
+        loginSessionCheck(request);//로그인 확인
         Page<ScheduleResponseDto> responsePage = scheduleService.getSchedule(page, size);
-        return ResponseEntity.ok(responsePage);
+        return ResponseEntity.ok(responsePage);//Page<ScheduleResponseDto>타입으로 리턴
     }
 
     //일정 수정 API
@@ -68,7 +68,7 @@ public class ScheduleController {
             @Valid @RequestBody ScheduleRequestDto requestDto,
             HttpServletRequest request){
 
-        loginSessionCheck(request);
+        loginSessionCheck(request);//로그인 확인
 
         return ResponseEntity.ok(scheduleService.updateSchedule(scheduleId, requestDto));
     }
@@ -76,8 +76,8 @@ public class ScheduleController {
     //일정 삭제 API
     @DeleteMapping("/{scheduleId}")
     public ResponseEntity<Long> deleteSchedule(@PathVariable Long scheduleId,HttpServletRequest request){
-        loginSessionCheck(request);
-        Long deletedId = scheduleService.deleteSchedule(scheduleId);
+        loginSessionCheck(request);//로그인 확인
+        Long deletedId = scheduleService.deleteSchedule(scheduleId);//삭제 실행
         return ResponseEntity.ok(deletedId);
     }
 }
